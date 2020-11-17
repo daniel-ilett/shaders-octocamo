@@ -7,6 +7,8 @@ public class CamoController : MonoBehaviour
     [SerializeField] private Terrain terrain;
     [SerializeField] private Material camoMaterial;
 
+    private float threshold = 0.5f;
+
     private void Start()
     {
         //terrain = Terrain.activeTerrain;
@@ -29,16 +31,14 @@ public class CamoController : MonoBehaviour
         position.z = ((transform.position.z - terrain.transform.position.z) / tData.size.z) * tData.alphamapHeight;
 
         int textureID = 0;
-        float alpha = 0.0f;
 
-        float[,,] alphamaps = tData.GetAlphamaps(0, 0, tData.alphamapWidth, tData.alphamapHeight);
+        float[,,] alphamaps = tData.GetAlphamaps((int)position.x, (int)position.z, 1, 1);
 
-        for (int i = 0; i < tData.alphamapTextureCount; ++i)
+        for (int i = 0; i < alphamaps.GetLength(2); ++i)
         {
-            if(alpha <= alphamaps[(int)position.x, (int)position.z, i])
+            if(threshold < alphamaps[0, 0, i])
             {
                 textureID = i;
-                //alpha = alphamaps[(int)position.x, (int)position.z, i];
             }
         }
 
