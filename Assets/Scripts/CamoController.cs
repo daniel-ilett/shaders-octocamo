@@ -44,5 +44,7 @@ public class CamoController : MonoBehaviour
 
         Texture2D camoTexture = tData.terrainLayers[textureID].diffuseTexture;
         camoMaterial.mainTexture = camoTexture;
+
+        CamoDatabase.Instance.GetCamoColour(camoTexture);
     }
 }
