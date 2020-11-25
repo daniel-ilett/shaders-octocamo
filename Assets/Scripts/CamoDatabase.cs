@@ -49,7 +49,8 @@ public class CamoDatabase
 
         color /= pixels.Length;
 
-        Debug.Log(new Color(color.x, color.y, color.z));
-        return new Color(color.x, color.y, color.z);
+        var returnColor = new Color(color.x, color.y, color.z);
+        camoColours.Add(texture, returnColor);
+        return returnColor;
     }
 }

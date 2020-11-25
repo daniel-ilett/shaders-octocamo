@@ -42,4 +42,9 @@ public class PlayerController : MonoBehaviour
         isMoving = Mathf.Abs(x) > 0.05f || Mathf.Abs(z) > 0.05f;
         animator.SetBool("IsMoving", isMoving);
     }
+
+    public bool IsMoving()
+    {
+        return isMoving;
+    }
 }

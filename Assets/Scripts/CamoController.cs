@@ -1,28 +1,67 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CamoController : MonoBehaviour
 {
     [SerializeField] private Terrain terrain;
     [SerializeField] private Material camoMaterial;
+    [SerializeField] private Text camoIndexText;
 
-    private float threshold = 0.5f;
+    private float camoIndex = 0.0f;
+    private Texture2D currentCamo;
+    private float camoIndexUpdateTime = 0.0f;
+    private Coroutine setCamoRoutine = null;
+
+    private const float camoSwitchTime = 0.75f;
+    private const float camoThreshold = 0.5f;
+    private const float camoIndexUpdateThreshold = 1.0f;
+
+    private PlayerController playerController;
 
     private void Start()
     {
+        CamoDatabase.Instance.GetCamoColour((Texture2D)camoMaterial.mainTexture);
         //terrain = Terrain.activeTerrain;
+        playerController = GetComponent<PlayerController>();
     }
 
     private void Update()
     {
-        if(Input.GetButtonDown("Fire1"))
+        if(Input.GetButtonDown("Fire1") && setCamoRoutine == null)
         {
-            SetCamo();
+            setCamoRoutine = StartCoroutine(SetCamo());
+            UpdateCamoIndex();
         }
+        else if(camoIndexUpdateTime > camoIndexUpdateThreshold && playerController.IsMoving())
+        {
+            UpdateCamoIndex();
+        }
+
+        camoIndexUpdateTime += Time.deltaTime;
     }
 
-    private void SetCamo()
+    private IEnumerator SetCamo()
+    {
+        for(float t = 0; t < camoSwitchTime; t += Time.deltaTime)
+        {
+            yield return null;
+        }
+
+        var camoTexture = GetTerrainTexture();
+        camoMaterial.mainTexture = camoTexture;
+        CamoDatabase.Instance.GetCamoColour(camoTexture);
+
+        for (float t = 0; t < camoSwitchTime; t += Time.deltaTime)
+        {
+            yield return null;
+        }
+
+        setCamoRoutine = null;
+    }
+
+    private Texture2D GetTerrainTexture()
     {
         TerrainData tData = terrain.terrainData;
 
@@ -36,15 +75,27 @@ public class CamoController : MonoBehaviour
 
         for (int i = 0; i < alphamaps.GetLength(2); ++i)
         {
-            if(threshold < alphamaps[0, 0, i])
+            if (camoThreshold < alphamaps[0, 0, i])
             {
                 textureID = i;
             }
         }
 
-        Texture2D camoTexture = tData.terrainLayers[textureID].diffuseTexture;
-        camoMaterial.mainTexture = camoTexture;
+        return tData.terrainLayers[textureID].diffuseTexture;
+    }
 
-        CamoDatabase.Instance.GetCamoColour(camoTexture);
+    private void UpdateCamoIndex()
+    {
+        var terrainTexture = GetTerrainTexture();
+
+        var terrainColor = CamoDatabase.Instance.GetCamoColour(terrainTexture);
+        var camoColor = CamoDatabase.Instance.GetCamoColour((Texture2D)camoMaterial.mainTexture);
+
+        camoIndex = 1.0f - Mathf.Sqrt(Mathf.Pow(terrainColor.r - camoColor.r, 2) + 
+            Mathf.Pow(terrainColor.g - camoColor.g, 2) + Mathf.Pow(terrainColor.b - camoColor.b, 2));
+
+        camoIndexText.text = Mathf.RoundToInt(camoIndex * 100.0f) + "%";
+
+        camoIndexUpdateTime = 0.0f;
     }
 }
