@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
         var x = Input.GetAxis("Horizontal");
         var z = Input.GetAxis("Vertical");
 
-        var move = new Vector3(x, 0.0f, z);
+        var move = new Vector3(x, 0.0f, z) * moveSpeed * (isProne ? 0.4f : 1.0f);
 
         rigidbody.velocity = transform.TransformVector(move);
 

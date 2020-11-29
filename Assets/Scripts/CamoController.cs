@@ -8,6 +8,7 @@ public class CamoController : MonoBehaviour
     [SerializeField] private Terrain terrain;
     [SerializeField] private Material camoMaterial;
     [SerializeField] private Text camoIndexText;
+    [SerializeField] private Image camoIndexImage;
 
     private float camoIndex = 0.0f;
     private Texture2D currentCamo;
@@ -44,19 +45,29 @@ public class CamoController : MonoBehaviour
 
     private IEnumerator SetCamo()
     {
-        for(float t = 0; t < camoSwitchTime; t += Time.deltaTime)
+        var camoTexture = GetTerrainTexture();
+        if(camoTexture == camoMaterial.GetTexture("_CamoTexture"))
         {
-            yield return null;
+            yield break;
         }
 
-        var camoTexture = GetTerrainTexture();
-        camoMaterial.mainTexture = camoTexture;
+        for (float t = 0; t < camoSwitchTime; t += Time.deltaTime)
+        {
+            camoMaterial.SetFloat("_CamoAmount", 1.0f - (t / camoSwitchTime));
+            yield return null;
+        }
+        camoMaterial.SetFloat("_CamoAmount", 0.0f);
+
+        //camoMaterial.mainTexture = camoTexture;
+        camoMaterial.SetTexture("_CamoTexture", camoTexture);
         CamoDatabase.Instance.GetCamoColour(camoTexture);
 
         for (float t = 0; t < camoSwitchTime; t += Time.deltaTime)
         {
+            camoMaterial.SetFloat("_CamoAmount", (t / camoSwitchTime));
             yield return null;
         }
+        camoMaterial.SetFloat("_CamoAmount", 1.0f);
 
         setCamoRoutine = null;
     }
@@ -95,6 +106,7 @@ public class CamoController : MonoBehaviour
             Mathf.Pow(terrainColor.g - camoColor.g, 2) + Mathf.Pow(terrainColor.b - camoColor.b, 2));
 
         camoIndexText.text = Mathf.RoundToInt(camoIndex * 100.0f) + "%";
+        camoIndexImage.color = new Color(1.0f, 1.0f, 1.0f, 1.0f - camoIndex);
 
         camoIndexUpdateTime = 0.0f;
     }
