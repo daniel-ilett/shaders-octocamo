@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class CamoDatabase
 {
-    private Dictionary<Texture2D, Color> camoColours =
-        new Dictionary<Texture2D, Color>();
+    private Dictionary<Texture2D, Color> camoColours 
+        = new Dictionary<Texture2D, Color>();
 
     private static CamoDatabase instance = null;
-    public static CamoDatabase Instance {
+    public static CamoDatabase Instance
+    {
         get
         {
             if(instance == null)

@@ -1609,7 +1609,7 @@ CapsuleCollider:
   m_GameObject: {fileID: 7030262117138406721}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   m_Radius: 0.4
   m_Height: 2
   m_Direction: 2
@@ -1810,7 +1810,6 @@ GameObject:
   - component: {fileID: 6581414893470925449}
   - component: {fileID: 1078502633}
   - component: {fileID: 1078502631}
-  - component: {fileID: 2397781716058477646}
   m_Layer: 0
   m_Name: Robot Kyle
   m_TagString: Untagged
@@ -1850,7 +1849,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!95 &1078502631
 Animator:
@@ -1864,25 +1863,13 @@ Animator:
   m_Avatar: {fileID: 9000000, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
   m_Controller: {fileID: 9100000, guid: e4f16bb22eae23048b118a19c3f198a1, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 1
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &2397781716058477646
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7858420852274639002}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aed4c80caffba3c4c9b95dbf3e292d7b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8089450610906340619
 GameObject:
   m_ObjectHideFlags: 0
